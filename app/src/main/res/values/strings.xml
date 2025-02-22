@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Stoppested</string>
+    <string name="network_error">Error loading stoppesteder!</string>
+    <string name="stoppesteder">Stoppesteder</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="location_permission_required_long">Location permission is required to fetch departure information.</string>
+    <string name="search_location">Search Location</string>
+    <string name="search">Search</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="cancel">Cancel</string>
 </resources>
