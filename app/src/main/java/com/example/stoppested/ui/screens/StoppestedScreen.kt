@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.stoppested.R
 import com.example.stoppested.data.Stoppested
+import com.example.stoppested.ui.composables.SingleDepartureCard
+import com.example.stoppested.ui.composables.StoppestedCardView
 
 @Composable
 fun StoppestedScreen(
@@ -39,10 +42,6 @@ fun StoppestedScreen(
             is StoppestedUiState.Loading -> LoadingScreen(modifier)
             is StoppestedUiState.Loaded -> ResultScreen(
                 stoppestedUiState.current,
-                query,
-                placeName,
-                onQueryChange = { query = it },
-                onSearch = { onSearch(query) },
                 modifier.padding(top = contentPadding.calculateTopPadding())
             )
 
@@ -53,19 +52,26 @@ fun StoppestedScreen(
 
 @Composable
 fun ResultScreen(
-    stoppested: Stoppested,
-    query: String,
-    placeName: String?,
-    onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit,
+    stoppested: Stoppested?,
     modifier: Modifier = Modifier
 ) {
     LazyColumn (modifier = modifier) {
         item {
-            Text(text = "Stoppesteder")
+            StoppestedCardView {
+                Text(
+                    text = stoppested?.name ?: "HER",
+                    style = MaterialTheme.typography.headlineLarge,
+                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp)
+                )
+            }
         }
-        item {
-            Text(text = stoppested.name)
+        if (stoppested != null) {
+            items(stoppested.departures) { departure ->
+                StoppestedCardView {
+                    SingleDepartureCard(departure)
+                }
+
+            }
         }
     }
 }

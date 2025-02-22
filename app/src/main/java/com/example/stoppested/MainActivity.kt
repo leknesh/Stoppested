@@ -28,6 +28,9 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.compose.koinViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +43,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        callApi()
+    }
+}
+
+
+private fun callApi() {
+//    val request = buildStopPlaceQuery("NSR:StopPlace:548")
+
+    CoroutineScope(Dispatchers.IO).launch {
+//        try {
+//            val response = StoppestedApiClient.apiService.getDeparturesForStoppested("NSR:StopPlace:548")
+//            // Handle the response (e.g., update UI)
+//            println(response)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
     }
 }
 
@@ -95,7 +114,7 @@ fun App(stoppestedViewModel: StoppestedViewModel = koinViewModel<StoppestedViewM
                 .fillMaxSize()
                 .padding(innerPadding),
             onSearch = { query ->
-                stoppestedViewModel.setStartState()
+//                stoppestedViewModel.updateDepartures()
             },
             stoppestedUiState = stoppestedViewModel.uiState,
             placeName = "Oslo"

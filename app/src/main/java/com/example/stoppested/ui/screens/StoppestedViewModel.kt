@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stoppested.data.Stoppested
 import com.example.stoppested.data.StoppestedRepository
+import com.example.stoppested.data.toStoppested
 import com.example.stoppested.location.LocationProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,8 +29,13 @@ class StoppestedViewModel(
     var locationState: LocationState by mutableStateOf(LocationState(osloLat, osloLong))
         private set
 
+    var stoppestedState: StoppestedUiState by mutableStateOf(StoppestedUiState.Loading)
+        private set
+
     private val _placeNameState = MutableStateFlow("")
     val placeNameState: StateFlow<String> get() = _placeNameState
+
+
 
     fun updateLocation() {
         viewModelScope.launch {
@@ -38,7 +44,7 @@ class StoppestedViewModel(
                 if (location != null) {
                     locationState = LocationState(location.latitude, location.longitude)
                     Log.d("Stoppested", "Location: $location")
-                    uiState = StoppestedUiState.Loaded(stoppRepository.getDefaultStoppested())
+                    updateDepartures()
                 }
             } catch (e: Exception) {
                 Log.d("Stoppested", "Location error: $e")
@@ -46,8 +52,21 @@ class StoppestedViewModel(
         }
     }
 
-    fun setStartState() {
-        uiState = StoppestedUiState.Loaded(Stoppested("Oslo S", "3010010"))
+//    fun setStartState() {
+//        uiState = StoppestedUiState.Loaded(Stoppested("Oslo S", "3010010"))
+//    }
+
+    fun updateDepartures() {
+        viewModelScope.launch {
+            uiState = try {
+                val departures = stoppRepository.getDepartures("NSR:StopPlace:58367").stopPlace?.toStoppested()
+                Log.d("Stoppested", "Departures: $departures")
+                StoppestedUiState.Loaded(departures)
+            } catch (e: Exception) {
+                Log.d("Stoppested", "Load error: $e")
+                StoppestedUiState.Error(e.message ?: "An error occurred")
+            }
+        }
     }
 
 }
@@ -55,7 +74,7 @@ class StoppestedViewModel(
 data class LocationState(val latitude: Double, val longitude: Double)
 
 sealed interface StoppestedUiState {
-    data class Loaded(val current: Stoppested) : StoppestedUiState
+    data class Loaded(val current: Stoppested?) : StoppestedUiState
     data class Error(val message: String) : StoppestedUiState
     object Loading : StoppestedUiState
 }
