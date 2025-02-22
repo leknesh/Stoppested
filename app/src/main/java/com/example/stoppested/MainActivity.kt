@@ -90,12 +90,13 @@ fun App(stoppestedViewModel: StoppestedViewModel = koinViewModel<StoppestedViewM
             }
         }
 
-
         StoppestedScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            onSearch = { query -> {} },
+            onSearch = { query ->
+                stoppestedViewModel.setStartState()
+            },
             stoppestedUiState = stoppestedViewModel.uiState,
             placeName = "Oslo"
         )

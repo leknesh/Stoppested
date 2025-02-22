@@ -38,11 +38,16 @@ class StoppestedViewModel(
                 if (location != null) {
                     locationState = LocationState(location.latitude, location.longitude)
                     Log.d("Stoppested", "Location: $location")
+                    uiState = StoppestedUiState.Loaded(stoppRepository.getDefaultStoppested())
                 }
             } catch (e: Exception) {
                 Log.d("Stoppested", "Location error: $e")
             }
         }
+    }
+
+    fun setStartState() {
+        uiState = StoppestedUiState.Loaded(Stoppested("Oslo S", "3010010"))
     }
 
 }

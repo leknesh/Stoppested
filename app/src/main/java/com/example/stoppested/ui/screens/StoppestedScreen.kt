@@ -62,7 +62,10 @@ fun ResultScreen(
 ) {
     LazyColumn (modifier = modifier) {
         item {
-            Text(text = "Stoppested")
+            Text(text = "Stoppesteder")
+        }
+        item {
+            Text(text = stoppested.name)
         }
     }
 }
