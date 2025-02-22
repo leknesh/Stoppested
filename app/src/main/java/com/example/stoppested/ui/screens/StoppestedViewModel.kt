@@ -1,16 +1,21 @@
 package com.example.stoppested.ui.screens
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.stoppested.data.Stoppested
 import com.example.stoppested.data.StoppestedRepository
+import com.example.stoppested.location.LocationProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class StoppestedViewModel(
     private val stoppRepository: StoppestedRepository,
+    private val locationProvider: LocationProvider
 ) : ViewModel() {
 
     private val osloLat = 59.91
@@ -25,6 +30,20 @@ class StoppestedViewModel(
 
     private val _placeNameState = MutableStateFlow("")
     val placeNameState: StateFlow<String> get() = _placeNameState
+
+    fun updateLocation() {
+        viewModelScope.launch {
+            try {
+                val location = locationProvider.getCurrentLocation()
+                if (location != null) {
+                    locationState = LocationState(location.latitude, location.longitude)
+                    Log.d("Stoppested", "Location: $location")
+                }
+            } catch (e: Exception) {
+                Log.d("Stoppested", "Location error: $e")
+            }
+        }
+    }
 
 }
 

@@ -80,6 +80,16 @@ fun App(stoppestedViewModel: StoppestedViewModel = koinViewModel<StoppestedViewM
             )
         }
 
+        if (!permissionsGranted.value) {
+            LaunchedEffect(Unit) {
+
+            }
+        } else {
+            LaunchedEffect(Unit) {
+                stoppestedViewModel.updateLocation()
+            }
+        }
+
 
         StoppestedScreen(
             modifier = Modifier
