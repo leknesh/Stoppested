@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
-class StoppestedApiService(
+class DepartureApiService(
     private val stoppestedApolloClient: ApolloClient
 ) {
     suspend fun getDepartures(id: String): StopPlaceQuery.Data {

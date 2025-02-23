@@ -6,13 +6,16 @@ import com.example.stoppested.R
 data class Stoppested (
     val id: String,
     val name: String,
+    val latitude: Double?,
+    val longitude: Double?,
     val departures: List<Departure>
 )
 
 data class Departure(
     val lineName: String,
     val lineCode: String,
-    val expectedDeparture: String,
+    val scheduledDeparture: String,
+    val expectedDeparture: String? = null,
     val transportType: TransportType
 
 )
@@ -28,7 +31,7 @@ fun String.toTransportType() : TransportType {
         "bus" -> TransportType.BUS
         "tram" -> TransportType.TRAM
         "metro" -> TransportType.METRO
-        "ferry" -> TransportType.FERRY
+        "ferry", "water" -> TransportType.FERRY
         else -> TransportType.BUS
     }
 }
@@ -48,15 +51,19 @@ fun StopPlaceQuery.StopPlace.toStoppested(): Stoppested {
     return Stoppested(
         id = id,
         name = name,
+        latitude = latitude,
+        longitude = longitude,
         departures = this.estimatedCalls.map { it.toDeparture() }
     )
 }
 
+// not sure whether aimeddeparture or expecteddeparture is the correct one
 fun StopPlaceQuery.EstimatedCall.toDeparture(): Departure {
     return Departure(
         lineName = destinationDisplay?.frontText ?: "Bloksberg",
         lineCode = serviceJourney.journeyPattern?.line?.id?.substringAfterLast(":") ?: "42",
-        expectedDeparture = aimedDepartureTime.toString().substring(11, 19),                // not handling dates p.t
+        scheduledDeparture = aimedDepartureTime.toString().substring(11, 16),                // not handling dates p.t
+        expectedDeparture = expectedDepartureTime.toString().substring(11, 16),
         transportType = serviceJourney.journeyPattern?.line?.transportMode?.toString()?.toTransportType() ?: TransportType.BUS
     )
 }
