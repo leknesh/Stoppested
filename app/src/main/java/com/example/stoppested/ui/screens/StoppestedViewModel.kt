@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.stoppested.data.Stoppested
 import com.example.stoppested.data.StoppestedRepository
 import com.example.stoppested.data.StoppestedSuggestion
+import com.example.stoppested.data.getFilteredDepartures
 import com.example.stoppested.data.toStoppested
 import com.example.stoppested.data.toSuggestions
 import com.example.stoppested.location.LocationProvider
@@ -54,7 +55,8 @@ class StoppestedViewModel(
         viewModelScope.launch {
             uiState = try {
                 val departures = stoppRepository.getDepartures(selectedStopId).stopPlace?.toStoppested()
-                StoppestedUiState.Loaded(departures)
+                val filtered = departures?.getFilteredDepartures() ?: emptyList()
+                StoppestedUiState.Loaded(departures?.copy(departures = filtered))
             } catch (e: Exception) {
                 Log.d("Stoppested", "Load error: $e")
                 StoppestedUiState.Error(e.message ?: "An error occurred")

@@ -68,6 +68,14 @@ fun StopPlaceQuery.EstimatedCall.toDeparture(): Departure {
     )
 }
 
+fun Stoppested.getFilteredDepartures() : List<Departure> {
+    return departures
+        .groupBy { it.lineCode }
+        .map { (_, departures) ->
+            departures.sortedBy { it.expectedDeparture }.first()
+        }
+}
+
 
 
 
