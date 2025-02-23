@@ -65,10 +65,7 @@ dependencies {
     implementation(libs.accompanist.permissions)
     implementation(libs.koin.androidx.compose)
     implementation(libs.apollo.runtime)
-//    implementation(libs.apollo.coroutines.support)
-
-//    implementation(libs.play.services.location)
-//    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

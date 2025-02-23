@@ -6,6 +6,8 @@ import com.example.stoppested.R
 data class Stoppested (
     val id: String,
     val name: String,
+    val latitude: Double?,
+    val longitude: Double?,
     val departures: List<Departure>
 )
 
@@ -28,7 +30,7 @@ fun String.toTransportType() : TransportType {
         "bus" -> TransportType.BUS
         "tram" -> TransportType.TRAM
         "metro" -> TransportType.METRO
-        "ferry" -> TransportType.FERRY
+        "ferry", "water" -> TransportType.FERRY
         else -> TransportType.BUS
     }
 }
@@ -48,6 +50,8 @@ fun StopPlaceQuery.StopPlace.toStoppested(): Stoppested {
     return Stoppested(
         id = id,
         name = name,
+        latitude = latitude,
+        longitude = longitude,
         departures = this.estimatedCalls.map { it.toDeparture() }
     )
 }
@@ -56,7 +60,7 @@ fun StopPlaceQuery.EstimatedCall.toDeparture(): Departure {
     return Departure(
         lineName = destinationDisplay?.frontText ?: "Bloksberg",
         lineCode = serviceJourney.journeyPattern?.line?.id?.substringAfterLast(":") ?: "42",
-        expectedDeparture = aimedDepartureTime.toString().substring(11, 19),                // not handling dates p.t
+        expectedDeparture = aimedDepartureTime.toString().substring(11, 16),                // not handling dates p.t
         transportType = serviceJourney.journeyPattern?.line?.transportMode?.toString()?.toTransportType() ?: TransportType.BUS
     )
 }

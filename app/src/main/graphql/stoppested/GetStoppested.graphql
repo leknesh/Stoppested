@@ -2,6 +2,8 @@ query StopPlace($id: String!) {
     stopPlace(id: $id) {
         id
         name
+        latitude
+        longitude
         estimatedCalls(timeRange: 72100, numberOfDepartures: 10) {
             realtime
             aimedArrivalTime

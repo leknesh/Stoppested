@@ -7,8 +7,9 @@ import android.location.LocationManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class LocationProvider(private val context: Context) {
-
+class LocationProvider(
+    private val context: Context
+) {
     @SuppressLint("MissingPermission")
     suspend fun getCurrentLocation(): Location? {
         return withContext(Dispatchers.IO) {
