@@ -14,7 +14,8 @@ data class Stoppested (
 data class Departure(
     val lineName: String,
     val lineCode: String,
-    val expectedDeparture: String,
+    val scheduledDeparture: String,
+    val expectedDeparture: String? = null,
     val transportType: TransportType
 
 )
@@ -56,11 +57,13 @@ fun StopPlaceQuery.StopPlace.toStoppested(): Stoppested {
     )
 }
 
+// not sure whether aimeddeparture or expecteddeparture is the correct one
 fun StopPlaceQuery.EstimatedCall.toDeparture(): Departure {
     return Departure(
         lineName = destinationDisplay?.frontText ?: "Bloksberg",
         lineCode = serviceJourney.journeyPattern?.line?.id?.substringAfterLast(":") ?: "42",
-        expectedDeparture = aimedDepartureTime.toString().substring(11, 16),                // not handling dates p.t
+        scheduledDeparture = aimedDepartureTime.toString().substring(11, 16),                // not handling dates p.t
+        expectedDeparture = expectedDepartureTime.toString().substring(11, 16),
         transportType = serviceJourney.journeyPattern?.line?.transportMode?.toString()?.toTransportType() ?: TransportType.BUS
     )
 }
